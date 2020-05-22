@@ -1,8 +1,8 @@
 LIST
-![alt text](list-contacts.png "List contacts // screenshot")
+!["List contacts // screenshot"](https://raw.githubusercontent.com/AleksandrRedka/goit-nodejs/01-node-basics/list-contacts.png)
 GET
-![alt text](./get-contact.png "Get contact by id // screenshot")
+!["Get contact by id // screenshot"](./get-contact.png "Get contact by id // screenshot")
 ADD
-![alt text](./add-contact.png "Add contact // csreenshot")
+!["Add contact // csreenshot"](./add-contact.png )
 Remove
-![alt text](./remove-contact.png "Add contact // csreenshot")
+!["Add contact // csreenshot"](./remove-contact.png )
