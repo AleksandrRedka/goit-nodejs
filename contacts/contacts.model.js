@@ -1,15 +1,22 @@
-import { v4 as uuid } from 'uuid'
-import fs from 'fs'
-import path from 'path'
-import { throws } from 'assert'
+import mongoose, { Schema } from 'mongoose'
 
-const fsPromises = fs.promises
-const contactsPath = path.join(__dirname, '../', 'db/', 'contacts.json')
+const contactSchema = new Schema({
+  name: String,
+  email: String,
+  phone: String,
+  subscription: String,
+  password: String,
+  token: String
+})
 
 class Contact {
-  getContacts = async () => {
+  constructor () {
+    this.contact = mongoose.model('contacts', contactSchema)
+  }
+
+  getContacts = async query => {
     try {
-      const contacts = await listContacts()
+      const contacts = await this.contact.find(query)
       return contacts
     } catch (err) {
       return null
@@ -18,10 +25,7 @@ class Contact {
 
   getById = async contactId => {
     try {
-      const contacts = await listContacts()
-      const findedContact =
-        contacts.find(contact => contact.id == contactId) || null
-      return findedContact
+      return await this.contact.findById(contactId)
     } catch (err) {
       return null
     }
@@ -29,16 +33,15 @@ class Contact {
 
   addContact = async contact => {
     try {
-      const contacts = await listContacts()
       const newContact = {
-        id: uuid(),
         name: contact.name,
         email: contact.email,
-        phone: contact.email
+        phone: contact.phone,
+        subscription: contact.subscription || '',
+        password: contact.password,
+        token: contact.token || ''
       }
-      contacts.push(newContact)
-
-      fsPromises.writeFile(contactsPath, JSON.stringify(contacts))
+      await this.contact.create(newContact)
       return newContact
     } catch (err) {
       return null
@@ -46,11 +49,7 @@ class Contact {
   }
   removeContact = async contactId => {
     try {
-      const contacts = await listContacts()
-      const newListContact = contacts.filter(
-        contact => contact.id !== contactId
-      )
-      fsPromises.writeFile(contactsPath, JSON.stringify(newListContact))
+      await this.contact.deleteOne({ _id: contactId })
       return true
     } catch (err) {
       return null
@@ -59,26 +58,13 @@ class Contact {
 
   updateContact = async contact => {
     try {
-      const contacts = await listContacts()
-      const contactIndex = contacts.findIndex(c => c.id == contact.id)
-      if (contactIndex > -1) {
-        contacts.splice(contactIndex, 1)
-        contacts.push(contact)
-        fsPromises.writeFile(contactsPath, JSON.stringify(contacts))
-        return contact
-      } else {
-        throw new Error()
-      }
+      const { id, ...contactData } = contact
+      await this.contact.updateOne({ _id: id }, contactData)
+      return await this.getById(id)
     } catch (err) {
       return null
     }
   }
-}
-
-const listContacts = async () => {
-  const result = await fsPromises.readFile(contactsPath, 'utf-8')
-  const contactsList = JSON.parse(result)
-  return contactsList
 }
 
 export default new Contact()

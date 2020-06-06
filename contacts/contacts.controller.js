@@ -1,5 +1,4 @@
 import Contacts from './contacts.model'
-import contacts from '../db/contacts.json'
 
 export const getContactsController = async (req, res) => {
   try {
@@ -17,7 +16,6 @@ export const getContactsController = async (req, res) => {
 export const getContactByIdController = async (req, res) => {
   try {
     const contact = await Contacts.getById(req.params.id)
-    console.log(contact)
     if (contact) {
       res.status(200).json(contact)
     } else {
@@ -39,6 +37,7 @@ export const addContactController = async (req, res) => {
 
 export const removeContactController = async (req, res) => {
   try {
+    console.log(req.params.id)
     const result = await Contacts.removeContact(req.params.id)
     if (result) {
       res.status(201).send('Contact deleted')
