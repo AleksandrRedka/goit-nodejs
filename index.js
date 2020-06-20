@@ -1,10 +1,14 @@
 require = require('esm')(module)
 
-import express from 'express'
+import dotenv from 'dotenv'
+dotenv.config()
 import config from 'config'
+import express from 'express'
 import cors from 'cors'
 import contactsRouter from './contacts/contacts.router'
 import mongoose from 'mongoose'
+import authRouter from './auth/auth.router'
+import usersRouter from './users/users.router'
 
 const PORT = config.get('PORT') || 3000
 
@@ -24,6 +28,10 @@ const start = async () => {
     app.use(express.json())
 
     app.use('/contacts', contactsRouter)
+
+    app.use('/auth', authRouter)
+
+    app.use('/users', usersRouter)
 
     app.listen(PORT, () => {
       console.log(`Server listening on ${PORT} port`)

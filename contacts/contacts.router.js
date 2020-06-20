@@ -7,16 +7,27 @@ import {
   updateContactController
 } from './contacts.controller'
 import { contactValidateMiddleware } from './contacts.validator'
+import { tokenMiddleware } from '../middlewares/auth.middlewares'
 
 const contactsRouter = Router()
 
-contactsRouter.get('/', getContactsController)
-contactsRouter.get('/:id', getContactByIdController)
+contactsRouter.get('/', tokenMiddleware, getContactsController)
+contactsRouter.get('/:id', tokenMiddleware, getContactByIdController)
 
-contactsRouter.post('/', contactValidateMiddleware, addContactController)
+contactsRouter.post(
+  '/',
+  tokenMiddleware,
+  contactValidateMiddleware,
+  addContactController
+)
 
-contactsRouter.delete('/:id', removeContactController)
+contactsRouter.delete('/:id', tokenMiddleware, removeContactController)
 
-contactsRouter.patch('/:id', contactValidateMiddleware, updateContactController)
+contactsRouter.patch(
+  '/:id',
+  tokenMiddleware,
+  contactValidateMiddleware,
+  updateContactController
+)
 
 export default contactsRouter

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const contactSchema = new Schema({
   name: String,
@@ -8,6 +9,8 @@ const contactSchema = new Schema({
   password: String,
   token: String
 })
+
+contactSchema.plugin(mongoosePaginate)
 
 class Contact {
   constructor () {
@@ -65,6 +68,8 @@ class Contact {
       return null
     }
   }
+
+  getFilteredContacts = async filter => {}
 }
 
 export default new Contact()
