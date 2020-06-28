@@ -3,7 +3,9 @@ import User from '../users/users.model'
 
 const userValidSchema = Joi.object({
   email: Joi.string().required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
+  name: Joi.string(),
+  gender: Joi.string()
 })
 
 export const userValidationMiddleware = (req, res, next) => {

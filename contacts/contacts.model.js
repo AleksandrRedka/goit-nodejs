@@ -68,8 +68,6 @@ class Contact {
       return null
     }
   }
-
-  getFilteredContacts = async filter => {}
 }
 
 export default new Contact()
