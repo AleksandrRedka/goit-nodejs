@@ -4,12 +4,20 @@ const userSchema = new Schema({
     type: String
   },
   password: String,
+  gender: String,
+  avatarURL: {
+    type: String,
+    default: ''
+  },
   subscription: {
     type: String,
     enum: ['free', 'pro', 'premium'],
     default: 'free'
   },
-  token: String
+  token: {
+    type: String,
+    default: ''
+  }
 })
 
 class User {

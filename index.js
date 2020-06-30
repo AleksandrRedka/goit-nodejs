@@ -13,7 +13,7 @@ import usersRouter from './users/users.router'
 const PORT = config.get('PORT') || 3000
 
 const corsOpt = {
-  origin: 'http://localhost:3000/'
+  origin: `http://localhost:${PORT}/`
 }
 
 const start = async () => {
@@ -32,6 +32,10 @@ const start = async () => {
     app.use('/auth', authRouter)
 
     app.use('/users', usersRouter)
+
+    app.use('/default-image/', express.static('tmp'))
+
+    app.use('/public/images', express.static('public/images'))
 
     app.listen(PORT, () => {
       console.log(`Server listening on ${PORT} port`)

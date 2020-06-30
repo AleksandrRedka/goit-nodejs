@@ -2,15 +2,23 @@ import bcrypt from 'bcrypt'
 import config from 'config'
 import User from '../users/users.model'
 import { createToken } from '../services/auth.service'
+import { generateAvatar } from '../services/avatarGenerator.services'
 
 export const registrationController = async (req, res) => {
   const salt = config.get('SALT')
   try {
     const hashPassword = await bcrypt.hash(req.body.password, salt)
-    const user = { ...req.body, password: hashPassword }
+    const imageInfo = await generateAvatar(req.body.email, req.body.gender)
+    const user = {
+      ...req.body,
+      password: hashPassword,
+      avatarURL: imageInfo.imagePath,
+      gender: imageInfo.gender
+    }
     const newUser = await User.createUser(user)
-    const { email, subscription, ...data } = newUser
-    res.status(201).json({ user: { email, subscription } })
+    const { _id, email, subscription, avatarURL } = newUser
+
+    res.status(201).json({ user: { email, subscription, avatarURL } })
   } catch (err) {
     res.status(400).send(err.message || 'Server error')
   }
@@ -31,7 +39,7 @@ export const loginController = async (req, res) => {
 
     const token = await createToken({ id: user._id })
 
-    await User.updateUserToken(user, token)
+    await User.updateUser(user, { token })
 
     res.json({
       token,
@@ -40,8 +48,8 @@ export const loginController = async (req, res) => {
         subscription: user.subscription
       }
     })
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.log(err)
     res.status(400).send('Server error')
   }
 }
