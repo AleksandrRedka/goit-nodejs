@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
+import { boolean } from '@hapi/joi'
 const userSchema = new Schema({
   email: {
     type: String
@@ -17,6 +18,14 @@ const userSchema = new Schema({
   token: {
     type: String,
     default: ''
+  },
+  verificationToken: {
+    type: String,
+    default: ''
+  },
+  isVerification: {
+    type: Boolean,
+    default: false
   }
 })
 
