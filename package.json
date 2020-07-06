@@ -20,6 +20,7 @@
   "homepage": "https://github.com/AleksandrRedka/goit-nodejs#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@sendgrid/mail": "^7.2.1",
     "avatar-generator": "^2.0.4",
     "bcrypt": "^5.0.0",
     "config": "^3.3.1",

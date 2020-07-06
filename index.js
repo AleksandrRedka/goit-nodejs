@@ -37,6 +37,8 @@ const start = async () => {
 
     app.use('/public/images', express.static('public/images'))
 
+    app.use('/', express.static('public'))
+
     app.listen(PORT, () => {
       console.log(`Server listening on ${PORT} port`)
     })

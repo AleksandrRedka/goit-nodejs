@@ -2,7 +2,8 @@ import { Router } from 'express'
 import {
   registrationController,
   loginController,
-  logoutController
+  logoutController,
+  verifyEmailController
 } from './auth.controller'
 import {
   userValidationMiddleware,
@@ -20,5 +21,6 @@ authRouter.post(
 )
 authRouter.post('/login', userValidationMiddleware, loginController)
 authRouter.post('/logout', tokenMiddleware, logoutController)
+authRouter.get('/verify/:token', verifyEmailController)
 
 export default authRouter

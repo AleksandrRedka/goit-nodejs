@@ -3,6 +3,7 @@ import config from 'config'
 import User from '../users/users.model'
 import { createToken } from '../services/auth.service'
 import { generateAvatar } from '../services/avatarGenerator.services'
+import { sendVerificationToken } from '../services/mailSendler.servece'
 
 export const registrationController = async (req, res) => {
   const salt = config.get('SALT')
@@ -15,8 +16,11 @@ export const registrationController = async (req, res) => {
       avatarURL: imageInfo.imagePath,
       gender: imageInfo.gender
     }
+
     const newUser = await User.createUser(user)
     const { _id, email, subscription, avatarURL } = newUser
+
+    await sendVerificationToken(_id, email)
 
     res.status(201).json({ user: { email, subscription, avatarURL } })
   } catch (err) {
@@ -61,5 +65,25 @@ export const logoutController = async (req, res) => {
     res.status(204)
   } catch (error) {
     res.status(400).send('Server error!')
+  }
+}
+
+export const verifyEmailController = async (req, res) => {
+  const verifyToken = req.params.token
+
+  const findedUserByToken = await User.findUser({
+    verificationToken: verifyToken
+  })
+
+  if (!verifyToken) {
+    res.status(401).send('No token provider!')
+  } else if (!findedUserByToken) {
+    res.redirect('http://localhost:3000/404.html')
+  } else {
+    await User.updateUser(findedUserByToken, {
+      verificationToken: '',
+      isVerification: true
+    })
+    res.redirect('http://localhost:3000/confirm-success.html')
   }
 }
